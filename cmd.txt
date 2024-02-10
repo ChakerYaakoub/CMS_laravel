@@ -1,0 +1,55 @@
+composer create-project laravel/laravel  CMS_laravel
+to run ==> php artisan serve
+-----
+create table ex : 
+php artisan make:migration create_design_templates_table --create=design_templates
+
+==> add the attributes  to tables 
+
+---- 
+
+in php my admin create new data base :
+
+.env add your variables  : 
+DB_DATABASE=cms_laravel
+https://gist.github.com/bradtraversy/c831baaad44343cc945e76c2e30927b3
+
+
+php artisan migrate 
+
+---- 
+
+create Models ==> just     use HasFactory;
+
+create Faker 
+
+---- 
+to refresh  data or update or delete   :
+php artisan migrate:refresh 
+
+------
+use seed 
+add 10 random users :
+uncomment in database/seeders/Data.. 
+
+ \App\Models\User::factory(10)->create();
+
+ then : 
+ php artisan db:seed  
+
+ or 
+
+ php artisan migrate:refresh --seed  
+
+ 
+
+
+==> to delete the users 
+then comment in database/seeders/Data..  
+php artisan migrate:refresh 
+
+-------
+
+
+
+

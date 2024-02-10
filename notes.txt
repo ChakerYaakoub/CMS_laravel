@@ -1,0 +1,66 @@
+run : 
+php artisan serve
+
+----- 
+
+CREATE USER 'laravelTP'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON * . * TO 'laravelTP'@'localhost';
+FLUSH PRIVILEGES;
+
+
+create a new table :
+
+php artisan make:migration create_listings_table
+
+==>  add your attribut
+
+php artisan migrate 
+
+==> we create all the sql table  
+
+------
+use seed 
+add 10 random users :
+uncomment in database/seeders/Data.. 
+
+ \App\Models\User::factory(10)->create();
+
+ then : 
+ php artisan db:seed  
+
+ or 
+
+ php artisan migrate:refresh --seed  
+
+ 
+
+
+==> to delete the users 
+then comment in database/seeders/Data..  
+php artisan migrate:refresh 
+
+-------
+
+then now we can delete the old model and create a model using our table 
+
+delete then ==> 
+php artisan make:model Listing  
+
+why ?? now we can use a lots of a functions 
+
+------ 
+
+make factory 
+php artisan make:factory ListingFactory
+
+------ 
+php artisan make:controller ListingController
+
+
+----- 
+
+a nice tools wen can use to se the query in browser 
+
+add Extension  clockwork to  chrome
+
+composer require itsgoingd/clockwork

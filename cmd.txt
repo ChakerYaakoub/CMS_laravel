@@ -23,6 +23,12 @@ create Models ==> just     use HasFactory;
 
 create Faker 
 
+
+
+make factory 
+php artisan make:factory ListingFactory
+
+
 ---- 
 to refresh  data or update or delete   :
 php artisan migrate:refresh 
@@ -50,6 +56,19 @@ php artisan migrate:refresh
 
 -------
 
+------ 
+php artisan make:controller ListingController
+
+
+----- 
+
+----- 
+
+a nice tools wen can use to se the query in browser 
+
+add Extension  clockwork to  chrome
+
+composer require itsgoingd/clockwork
 
 
 

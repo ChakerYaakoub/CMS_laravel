@@ -13,6 +13,7 @@
             referrerpolicy="no-referrer"
         />
         <script src="https://cdn.tailwindcss.com"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <script>
             tailwind.config = {
                 theme: {
@@ -24,25 +25,67 @@
                 },
             };
         </script>
-        <title>LaraGigs | Find Laravel Jobs & Projects</title>
+        <title>CMS corte </title>
+        <style>
+                .font-family-karla { font-family: karla; }
+        .bg-site { background: rgb(248 113 113); }
+        .bg-side { background: #FAF0E6; }
+        .cta-btn { color: #3d68ff; }
+        .upgrade-btn { background: #1947ee; }
+        .upgrade-btn:hover { background: #0038fd; }
+        .active-nav-link { background: #F7BCBC; }
+        .nav-item:hover { background: rgb(248 113 113);}
+        .account-link:hover { background: #3d68ff; }
+        </style>
     </head>
-    <body class="">
+    <body class="relative min-h-screen pb-28">
         <nav class="flex justify-between items-center mb-4">
             <a href="/"
                 ><img class="w-36" src="{{asset('images/logo.png')}}" alt="" class="logo"
             /></a>
             <ul class="flex space-x-6 mr-6 text-lg">
+
+                {{-- is login  --}}
+                @auth
+
                 <li>
-                    <a href="register.html" class="hover:text-laravel"
+                    <span class="font-blod uppercase">
+                      welcome, {{auth()->user()->name}}
+                    </span>
+                  </li>
+
+                <li>
+                    <a href="/sites/manager/dashboard" class="hover:text-laravel"
+                        ><i class="fa-solid fa-gear"></i> Manager Blogs</a
+                    >
+                </li>
+
+                <li>
+                  <form class="inline" method="POST" action="/logout">
+                    @csrf
+                    <button type="submit" class="hover:text-laravel">
+                      <i class="fa-solid fa-door-closed"></i> Logout
+                    </button>
+
+                  </form>
+                </li>
+              
+
+             {{-- not login   --}}
+             @else 
+                <li>
+                    <a href="/register" class="hover:text-laravel"
                         ><i class="fa-solid fa-user-plus"></i> Register</a
                     >
                 </li>
                 <li>
-                    <a href="login.html" class="hover:text-laravel"
+                    <a href="/login" class="hover:text-laravel"
                         ><i class="fa-solid fa-arrow-right-to-bracket"></i>
                         Login</a
                     >
                 </li>
+
+                @endauth
             </ul>
         </nav>
 
@@ -63,13 +106,14 @@
 
 
     <footer
-    class=" bottom-0 left-0 w-full flex items-center justify-start font-bold bg-red-400 text-white h-24  opacity-90 md:justify-center mt-12"
+    class="absolute bottom-0 left-0 w-full flex items-center justify-start font-bold bg-red-400 text-white h-24   opacity-90 md:justify-center mt-12"
 >
-    <p class="ml-2">Copyright &copy; 2022, All Rights reserved</p>
+    <p class="ml-2">CMS Corte Copyright &copy; 2022, All Rights reserved</p>
 
 
 </footer>
 
 
+<x-flash-message />
 </body>
 </html>

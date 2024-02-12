@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('design_templates', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->enum('template_type', ['vertical_menu', 'horizontal_menu', 'burger_menu'])->default('vertical_menu');
             $table->timestamps();
         });

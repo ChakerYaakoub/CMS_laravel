@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('font_color', 7);
             $table->string('background_color', 7);
             $table->string('section_separator_color', 7);

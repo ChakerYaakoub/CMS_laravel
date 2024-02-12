@@ -9,6 +9,17 @@ class Site extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id', 'is_public', 'is_accepted', 'site_title',
+        'link', 'introduction', 'logo', 'tags', 'BasicImage', 'design_template_id', 'color_id', 'site_builder'
+    ];
+
+
+
+
+
+
+
     public function scopeFilter($query, array $filters)
     {
         // if tags then need to filter by tags else nothings --> get all
@@ -17,10 +28,10 @@ class Site extends Model
         };
 
         if ($filters['search'] ?? false) {
-            $query->where('site_name', 'like', '%' . request('search') . '%')
-                ->orWhere('tags', 'like', '%' . request('search') . '%');
+            $query->where('site_title', 'like', '%' . request('search') . '%')
+                ->orWhere('tags', 'like', '%' . request('search') . '%')
+                ->orWhere('introduction', 'like', '%' . request('search') . '%')
+                ->orWhere('site_builder', 'like', '%' . request('search') . '%');
         };
     }
-
-    // protected $fillable = ['user_id', 'design_template_id', 'color_id', 'site_name'];
 }

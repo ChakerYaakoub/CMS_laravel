@@ -15,9 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('site_id');
-            $table->string('title');
-            $table->text('content');
-            $table->string('image_url');
+            $table->integer('article_nb');
+
+
+            $table->text('article_title');
+            $table->text('article_content');
+
+
+
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('site_id')->references('id')->on('sites');

@@ -12,7 +12,7 @@ class DesignTemplateFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
+
             'template_type' => $this->faker->randomElement(['vertical_menu', 'horizontal_menu', 'burger_menu']),
         ];
     }

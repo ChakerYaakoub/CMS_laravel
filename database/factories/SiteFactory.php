@@ -18,8 +18,12 @@ class SiteFactory extends Factory
             'user_id' =>  $this->faker->numberBetween(1, 20),
             'design_template_id' =>  $this->faker->numberBetween(1, 3),
             'color_id' => $this->faker->numberBetween(1, 20),
-            'site_name' => $this->faker->word,
-            'tags' => $this->faker->word,
+            'site_title' => $this->faker->word,
+            'introduction' => $this->faker->paragraph,
+            'tags' => $this->faker->word, // i want three word tags
+            'link' => $this->faker->url,
+            'logo' => $this->faker->imageUrl(640, 480, 'cats', true),
+            'BasicImage' => $this->faker->imageUrl(640, 480, 'cats', true),
         ];
     }
 }

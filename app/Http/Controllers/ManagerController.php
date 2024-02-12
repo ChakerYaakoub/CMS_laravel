@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Color;
 use App\Models\DesignTemplate;
+use App\Models\Reaction;
 use App\Models\Site;
+use App\Models\SiteVisit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use stdClass;
 
@@ -16,7 +19,20 @@ class ManagerController extends Controller
 
     public function show()
     {
-        return view('manager.index');
+        // Get the logged-in user's ID
+        $userId = Auth::id();
+
+
+
+        $totalVisits = SiteVisit::where('site_builder_id', $userId)->count();;
+
+        // Total number of sites by the logged-in user
+        $totalSites = Site::where('user_id', $userId)->count();
+
+        // Total reactions by the logged-in user
+        $totalReactions = Reaction::where('user_id', $userId)->count();
+
+        return view('manager.index', compact('totalVisits', 'totalSites', 'totalReactions'));
     }
 
     public function showForm()

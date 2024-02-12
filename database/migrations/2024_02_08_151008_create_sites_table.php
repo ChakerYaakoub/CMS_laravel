@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('link');
 
 
+
             $table->unsignedBigInteger('design_template_id');
 
             $table->unsignedBigInteger('color_id');

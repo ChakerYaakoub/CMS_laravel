@@ -9,5 +9,5 @@ class DesignTemplate extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'template_type'];
+    protected $fillable = ['template_type'];
 }

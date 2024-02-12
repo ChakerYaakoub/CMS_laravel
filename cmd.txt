@@ -70,5 +70,11 @@ add Extension  clockwork to  chrome
 
 composer require itsgoingd/clockwork
 
+--- image 
+
+and change the config / fileSystem to public ==> default 
+
+ php artisan storage:link
+
 
 

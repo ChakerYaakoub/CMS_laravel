@@ -1,102 +1,160 @@
+<div>
+    <div class="container">
 
-<div lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <div class="">
+            <div class="">
+                <div class="card">
 
-        <title>Support App.</title>
+                    <div class="text-2xl font-bold mb-4">Information Input and Article Details</div>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+                    <div class="mb-4">
+                        <p>Please provide the required information below. We'll start with general information
+                            followed by details about the articles you'd like to add.</p>
+                    </div>
 
-        <!-- Styles -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+                    <div class="card-body border-2 border-gray-900/10  p-5 rounded  ">
 
-        <link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet' type='text/css' />
 
-    </head>
-    <div>
-        <div class="container">
-            <div class="row justify-content-center">
-                <h1 class="col-md-8 my-5 text-center">
-                    Welcome To Our Support App
-                </h1>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">Submit a Support Request</div>
+                        <div class="mb-2 text-lg font-semibold">General Information</div>
 
-                        <div class="card-body">
-                            <form method="POST" action="" >
-                                {{-- {{ route('requests.store') }} --}}
-                                @csrf
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{(old('name') ? old('name')  : '')}} ">
-                                    @error('name')
-                                    <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('name') }}</strong>
-                                        </span>
-                                     @enderror
+                        {{-- https://tailwindcomponents.com/component/blog-post-1 --}}
+
+
+
+                        <form method="POST" action="/siteGeneral/store" enctype="multipart/form-data">
+                            @csrf
+
+
+
+                            {{-- title site --}}
+
+                            <x-form-input label=" Enter a catchy title for your blog  " name="site_title"
+                                placeholder="Enter blog title" />
+
+
+
+                            {{-- introduction --}}
+                            <x-form-textarea label="Provide an engaging introduction to your blog" name="introduction"
+                                placeholder="Enter introduction" />
+
+
+
+                            {{-- imgs  --}}
+
+                            <div class="flex justify-center">
+                                <div class="flex flex-wrap">
+                                    {{-- logo  --}}
+                                    <x-image-upload label="Upload your logo to personalize your blog  " name="logo"
+                                        placeholder=" logo/ site "></x-image-upload>
+
+                                    {{-- http://127.0.0.1:8000/images/logo.png --}}
+                                    {{-- basic image  --}}
+                                    <x-image-upload label=" Upload a basic image , blog's theme or topic."
+                                        name="BasicImage" placeholder=" Basic image"></x-image-upload>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email address</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email" value="{{(old('email') ? old('email')  : '')}} " aria-describedby="emailHelp">
-                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                                    @error('email')
-                                    <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('email') }}</strong>
-                                        </span>
-                                     @enderror
+                            </div>
+                            <br>
+
+
+
+
+
+
+                            {{-- tags --}}
+                            <x-form-input label="Add tags or categories to help organize your blog content  "
+                                name="tags" placeholder="E.g. google Bard Education ..  " />
+
+
+                            {{-- color  --}}
+                            <br>
+
+
+
+
+
+                            <div class="col-span-full m-5">
+
+                                <label class="block text-sm font-medium leading-6 text-gray-900 text-xl">
+                                    Choose the color for your text,Background,and Separations to match your blog's
+                                    design</label> <br>
+
+
+
+                                <div class="flex flex-wrap justify-around text-center">
+                                    <x-form-color label="Font Color" name="font_color" />
+                                    <x-form-color label="Background Color of Site" name="background_color" />
+                                    <x-form-color label="Section Separations" name="section_separator_color" />
                                 </div>
-                                <div class="mb-3">
-                                    <label for="subject" class="form-label">Subject</label>
-                                    <input type="text" class="form-control @error('subject') is-invalid @enderror" id="subject" name="subject" value="{{(old('subject') ? old('subject')  : '')}} " >
-                                    @error('subject')
-                                    <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('subject') }}</strong>
-                                        </span>
-                                     @enderror
+
+                            </div>
+
+                            <br>
+
+
+
+                            {{-- menu  --}}
+                            <x-form-radio name="template_type" value="horizontal_menu" />
+
+
+
+                            <br>
+
+                            <div x-data="{ open: true }" x-show="open"
+                                class=" border  m-9 border-green-500   text-green-800 bg-green-50 relative  border-t-4  rounded-b  px-4 py-3 shadow-md"
+                                role="alert">
+                                <div class="flex">
+                                    <div class="py-1"><svg
+                                            class="fill-current h-6 w-6  mr-4 border border-green-500   text-green-800 bg-green-50  border-0"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <path
+                                                d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+                                        </svg></div>
+                                    <div>
+                                        <p class="font-bold"> Note : </p>
+                                        <p class="text-sm">
+                                            For more information about the difference between the menu
+                                            types, visit this <a
+                                                href="http://127.0.0.1:8000/images/navigation-types.jpg"
+                                                class="underline text-gray-900" target="_blank">link</a>
+                                        </p>
+                                    </div>
+
+                                    <span @click="open = false"
+                                        class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer">
+                                        <svg class="fill-current h-6 w-6 text-green-500" role="button"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Close</title>
+                                            <path
+                                                d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                                        </svg>
+                                    </span>
                                 </div>
-
-                                <div class="mb-3">
-                                    <label for="request" class="form-label">Request Details</label>
-                                    <textarea class="form-control @error('request') is-invalid @enderror"
-                                    id="request" name="request" rows="5">{{(old('request') ? old('request')  : '')}}</textarea>
-
-                                    @error('request')
-                                    <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('request') }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                {{-- <button type="submit" class="btn btn-primary">Submit</button> --}}
-                                <button class="btn btn-primary">Submit</button>
+                            </div>
 
 
-                            </form>
-                        </div>
+                            <div class=" text-center">
+                                <button
+                                    class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                    Save General Information and Continue to Articles Details
+                                </button>
+                            </div>
+
+
+
+
+
+
+
+
+                        </form>
+
                     </div>
                 </div>
             </div>
         </div>
-        <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js'></script>
-
-        <script>
-            new FroalaEditor("#request", {
-
-                toolbarButtons: [
-                    ['fontSize', 'bold', 'italic', 'underline', 'strikeThrough'],
-                    [ 'alignLeft', 'alignCenter', 'alignRight', 'alignJustify','textColor', 'backgroundColor'],
-                    ['formatOLSimple', 'formatUL', 'insertLink','insertImage','insertFile'],
-                ]
-
-            });
-        </script>
     </div>
+
+
 
 </div>

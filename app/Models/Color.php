@@ -9,5 +9,5 @@ class Color extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'font_color', 'background_color', 'section_separator_color'];
+    protected $fillable = ['font_color', 'background_color', 'section_separator_color'];
 }

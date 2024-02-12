@@ -28,40 +28,45 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [SitesController::class, 'index']);
 
-// single listing 
-Route::get('site/{site}', ['as' => 'site', SitesController::class, 'show']);
+Route::middleware(['auth'])->group(function () {
+    // Routes that require authentication
+
+    // Manage blog
+    Route::get('/sites/manager/dashboard', [ManagerController::class, 'show']);
+
+    // Show new blog form 
+    Route::get('/sites/manager/newBlog', [ManagerController::class, 'showForm']);
+
+    // Show new articles form 
+    Route::get('/sites/manager/newBlog/articles/{site_id}', [ManagerController::class, 'showFormArticles']);
 
 
-// show Cerate form
-Route::get('site/create', [SitesController::class, 'create']);
 
+    // Store new blog general information 
+    Route::post('/siteGeneral/store', [ManagerController::class, 'storeGeneral']);
 
+    // Store new blog articles
+    // Route::post('/siteArticles/store?site_id={site_id}&addNew={addNew}&article_nb={article_nb}', [ManagerController::class, 'storeArticles']);
 
-// show register form
+    Route::post('/siteArticles/store/{site_id}/{addNew}/{article_nb}', [ManagerController::class, 'storeArticles']);
+
+    // /upload_image/articles 
+    Route::post('/upload_image/articles', [ManagerController::class, 'upload_imageArticles']);
+
+    // image_delete / articles
+    Route::post('/image_delete/articles', [ManagerController::class, 'remove_imageArticles']);
+});
+
+// Auth routes
 Route::get('/register', [UserController::class, 'create']);
-
-
-// store user
 Route::post('/users', [UserController::class, 'store']);
-
-// logout user 
+Route::get('/login', [UserController::class, 'login']);
+Route::post('/users/authenticate', [UserController::class, 'authenticate']);
 Route::post('/logout', [UserController::class, 'logout']);
 
-
-// login from 
-Route::get('/login', [UserController::class, 'login']);
-
-// login user
-Route::post('/users/authenticate', [UserController::class, 'authenticate']);
-
-// manage blog
-Route::get('/sites/manager/dashboard', [ManagerController::class, 'show']);
-
-// create new blog form 
-Route::get('/sites/manager/newBlog', [ManagerController::class, 'showForm']);
-
-
-
+// Public routes
+Route::get('/', [SitesController::class, 'index']);
+Route::get('site/{site}', ['as' => 'site', SitesController::class, 'show']);
+Route::get('site/create', [SitesController::class, 'create']);
 Route::post('/upload/image', [ImageController::class, 'upload'])->name('upload.image');

@@ -12,7 +12,7 @@ class ColorFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
+
             'font_color' => $this->faker->hexColor,
             'background_color' => $this->faker->hexColor,
             'section_separator_color' => $this->faker->hexColor,

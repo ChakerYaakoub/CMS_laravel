@@ -12,10 +12,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use stdClass;
+use Illuminate\Validation\ValidationException;
 
 class ManagerController extends Controller
 {
     //
+
+    public function myBlogs()
+    {
+        $userId = Auth::id();
+        $sites = Site::where('user_id', $userId)->get();
+        return view('manager.myBlogs', compact('sites'));
+    }
 
     public function show()
     {
@@ -32,7 +40,9 @@ class ManagerController extends Controller
         // Total reactions by the logged-in user
         $totalReactions = Reaction::where('user_id', $userId)->count();
 
-        return view('manager.index', compact('totalVisits', 'totalSites', 'totalReactions'));
+        $sites = Site::where('user_id', $userId)->get();
+
+        return view('manager.index', compact('totalVisits', 'totalSites', 'totalReactions', 'sites'));
     }
 
     public function showForm()
@@ -84,13 +94,13 @@ class ManagerController extends Controller
         if ($request->hasFile('logo')) {
 
 
-            $validatedData['logo'] = $request->file('logo')->store(str_replace(' ', '_', "sites/{$validatedData['site_title']}"), 'public');
+            $validatedData['logo'] = $request->file('logo')->store(str_replace(' ', '_', "sites/general"), 'public');
         }
 
         if ($request->hasFile('BasicImage')) {
 
 
-            $validatedData['BasicImage'] = $request->file('BasicImage')->store(str_replace(' ', '_', "sites/{$validatedData['site_title']}"), 'public');
+            $validatedData['BasicImage'] = $request->file('BasicImage')->store(str_replace(' ', '_', "sites/general"), 'public');
         }
 
         $site = Site::create([
@@ -110,8 +120,8 @@ class ManagerController extends Controller
 
         //  return $site->id; 
 
-        return redirect("/sites/manager/newBlog/articles/{$site->id}?article_nb=1")
-            ->with('message', 'Thanks for signing up!');
+        return redirect("/sites/manager/newBlog/articles/{$site->id}?article_nb=1");
+        //  ->with('message', 'Thanks for signing up!');
     }
 
 
@@ -132,7 +142,7 @@ class ManagerController extends Controller
         $site_title = $site->site_title;
 
         // Store the uploaded image in the 'public/images' directory
-        $path = $request->file('image_param')->store(str_replace(' ', '_', "sites/{$site_title}"), 'public');
+        $path = $request->file('image_param')->store("sites/articles", 'public');
 
         // Generate the URL for the uploaded image
         $link = Storage::url($path);
@@ -185,7 +195,7 @@ class ManagerController extends Controller
         ]);
 
         $article = Article::create([
-            'user_id' => auth()->user()->id,
+            // 'user_id' => auth()->user()->id,
             'site_id' => $site_id,
             'article_title' => $validatedData['article_title'],
             'article_content' => $validatedData['article_content'],
@@ -198,4 +208,205 @@ class ManagerController extends Controller
             return redirect("/site/$site_id");
         }
     }
+
+    // editBlog 
+
+    public      function editBlogForm($site_id)
+    {
+        $site = Site::find($site_id);
+
+        $site_template = DesignTemplate::where('id', $site->design_template_id)->first()->template_type;
+        $site_color = Color::where('id', $site->color_id)->first();
+        $site_articles = Article::where('site_id', $site->id)->get();
+
+        // return view('sites.show', [
+        //    'site' => $site,
+        //   'site_template' => $site_template->template_type,
+        //   'site_color' => $site_color,
+        //   //'site_articles' => $site_articles
+        //  ]);
+
+        return view('manager.edit', compact('site', 'site_template', 'site_color', 'site_articles'));
+    }
+
+    // update site
+    public function updateSite(Request $request, $site_id)
+    {
+
+
+
+
+        // try {
+        $validatedData = $request->validate([
+            // general data 
+            'site_title' => 'required|string|max:255',
+            'site_id' => 'required|integer', // 'site_id' is required and must be an 'integer
+            'introduction' => 'required|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'BasicImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'tags' => 'required|string',
+            'font_color' => 'required|string',
+            'background_color' => 'required|string',
+            'section_separator_color' => 'required|string',
+            'template_type' => 'required|string',
+
+            // articles
+            'articles.*.title' => 'required|string|max:255',
+            'articles.*.content' => 'nullable|string',
+            'articles.*.id' => 'integer',
+            'articles.*.delete' => 'string',
+
+
+        ]);
+
+
+
+
+
+        $site = Site::where('id', $validatedData['site_id'])->first(); // Use first() instead of get()
+
+        if (!$site) {
+            throw new \Exception("Site not found with ID: {$validatedData['site_id']}");
+        };
+
+
+
+
+
+
+        $color = Color::create([
+            'font_color' => $validatedData['font_color'],
+            'background_color' => $validatedData['background_color'],
+            'section_separator_color' => $validatedData['section_separator_color'],
+        ]);
+
+        $template = DesignTemplate::create([
+            'template_type' => $validatedData['template_type'],
+        ]);
+
+
+
+
+        if ($request->hasFile('logo')) {
+
+            // Storage::delete($site->logo);
+            $s = Storage::delete('public/' . $site->logo);
+
+
+
+
+
+
+            $validatedData['logo'] = $request->file('logo')->store(str_replace(' ', '_', "sites/general"), 'public');
+        }
+
+        if ($request->hasFile('BasicImage')) {
+
+
+            $s = Storage::delete('public/' . $site->BasicImage);
+
+
+
+
+
+
+
+            $validatedData['BasicImage'] = $request->file('BasicImage')->store(str_replace(' ', '_', "sites/general"), 'public');
+        }
+
+        $site->update([
+            'site_title' => $validatedData['site_title'],
+            'introduction' => $validatedData['introduction'],
+            'tags' => $validatedData['tags'],
+            'color_id' => $color->id,
+            'design_template_id' => $template->id,
+            'logo' => $validatedData['logo'] ?? $site->logo, // Use existing logo if not provided
+            'BasicImage' => $validatedData['BasicImage'] ?? $site->BasicImage, // Use existing BasicImage if not provided
+            'link' => 'http://'
+
+
+        ]);
+        $site->save();
+
+
+        // Process articles
+        $articleNb = 1;
+        foreach ($validatedData['articles'] as $articleIndex => $articleData) {
+            if ($articleData['delete'] === 'true') {
+                Article::destroy($articleData['id']);
+            } else {
+                //  $article = Article::find($articleData['id']);
+                $article = Article::where('id', $articleData['id'])->first(); // Use first() instead of get()
+
+
+                if (!$article) {
+                    throw new \Exception("Article not found with ID: {$articleData['id']}");
+                }
+
+                $article->update([
+                    'article_title' => $articleData['title'],
+                    'article_content' => $articleData['content'],
+                    'article_nb' => $articleNb,
+                ]);
+
+                //dd($articleData);
+                // dd($article->toArray());
+
+                $article->save();
+
+                $articleNb++;
+
+                // You don't need to call $article->save() here, because ->update() method already saves the changes.
+            }
+        }
+
+
+
+        //Color::destroy($site->color_id);
+        // DesignTemplate::destroy($site->design_template_id);
+        return redirect('/site/' . $validatedData['site_id'])->with('success', 'Site updated successfully');
+        //  }
+        //catch (ValidationException $e) {
+        // Handle validation errors
+        //    return $e->errors();
+        // }
+        //  catch (\Exception $e) {
+        // Handle other exceptions
+        //     return redirect('/sites/manager/edit/site/' . $site_id)->with('error', $e->getMessage());
+        // }
+    }
+
+    public function upload_imageArticles_edit(Request $request)
+    {
+
+        // Validate the uploaded image
+        $validatedData =  $request->validate([
+            'image_param' => 'required|image|max:2048', // Max file size: 2MB
+            'site_id' => 'required|integer',
+            'title' => 'required|string|max:255',
+
+        ]);
+
+
+
+
+        // Store the uploaded image in the 'public/images' directory
+        // {$validatedData['title']}
+        $path = $request->file('image_param')->store(str_replace(' ', '_', "sites/articles"), 'public');
+
+        // Generate the URL for the uploaded image
+        $link = Storage::url($path);
+
+
+
+
+        return response()->json([
+
+            'link' => $link,
+        ]);
+    }
+
+
+    // delete image articles
+
 }

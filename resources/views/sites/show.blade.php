@@ -5,53 +5,89 @@
 
 <x-layout>
 
-    @include('partials._search')
+    <head>
+        <style>
+            main {
+                background-color: {{ $site_color->background_color }};
+                color: {{ $site_color->font_color }};
+            }
+        </style>
+    </head>
+
+
 
     <a href="{{ url()->previous() }}" class="inline-block text-black ml-4 mb-4">
         <i class="fa-solid fa-arrow-left"></i> Back
     </a>
+    {{-- {{ $site }} --}}
+    {{-- {{ $site_template }} --}}
+    {{-- {{ $site_color }} --}}
 
-    <div class="mx-4">
-
-
-
-        <x-card class="p-24">
-
-            <div class="flex flex-col items-center justify-center text-center">
-                <img class="w-48 mr-6 mb-6" src="{{ asset('images/no-image.png') }}" alt="{{ $site->site_title }} - img" />
-
-                <h3 class="text-2xl mb-2">{{ $site->site_title }}</h3>
-                {{-- // <div class="text-xl font-bold mb-4"> company </div> --}}
-                <x-site-tags :tags-csv="$site->tags" />
-                <div class="text-lg my-4">
-                    {{-- // <i class="fa-solid fa-location-dot"></i> listing : location --}}
-                </div>
-                <div class="border border-gray-200 w-full mb-6"></div>
-                <div>
-                    <h3 class="text-3xl font-bold mb-4">
-                        {{-- // Job Description --}}
-                    </h3>
-                    <div class="text-lg space-y-6">
-                        <p>
-                            {{ $site->introduction }}
-                        </p>
-
-
-                        {{-- <a href="mailto:email  "
-                            class="block bg-laravel text-white mt-6 py-2 rounded-xl hover:opacity-80"><i
-                                class="fa-solid fa-envelope"></i>
-                            Contact Employer</a>
-
-                        <a href="https:// webiste  " target="_blank"
-                            class="block bg-black text-white py-2 rounded-xl hover:opacity-80"><i
-                                class="fa-solid fa-globe"></i> Visit
-                            Website</a> --}}
-                    </div>
-                </div>
-            </div>
-        </x-card>
+    <div class="fr-view">
+        {{-- {!! $site_articles[0]->article_content !!} --}}
 
     </div>
+
+
+
+
+
+
+    @if ($site_template == 'vertical_menu')
+        @include('sites.partials.sidebareTemplate', [
+            'site' => $site,
+            'site_template' => $site_template,
+            'site_color' => $site_color,
+            'site_articles' => $site_articles,
+        ])
+    @elseif ($site_template == 'horizontal_menu')
+        @include('sites.partials.horizontalTemplate', [
+            'site' => $site,
+            'site_template' => $site_template,
+            'site_color' => $site_color,
+            'site_articles' => $site_articles,
+        ])
+    @else
+        @include('sites.partials.burgerTemplate', [
+            'site' => $site,
+            'site_template' => $site_template,
+            'site_color' => $site_color,
+            'site_articles' => $site_articles,
+        ])
+    @endif
+
+
+
+
+    {{-- @include('sites.partials.sidebareTemplate', [
+        'site' => $site,
+        'site_template' => $site_template,
+        'site_color' => $site_color,
+        'site_articles' => $site_articles,
+    ]) --}}
+
+    {{-- @include('sites.partials.siteContents', [
+        'site' => $site,
+        'site_color' => $site_color,
+        'site_articles' => $site_articles,
+    ]) --}
+    }
+
+    }
+
+
+
+
+
+
+
+
     {{-- @endsection --}}
+
+    <script>
+        console.log('site: ', @json($site_articles))
+    </script>
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js'>
+    </script>
 
 </x-layout>

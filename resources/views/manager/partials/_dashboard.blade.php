@@ -75,37 +75,38 @@
 
     {{-- table if we want  --}}
 
-    <div class="w-full mt-12">
+    <div class="w-auto mt-12">
         <p class="text-xl pb-3 flex items-center">
             <i class="fas fa-list mr-3"></i> My Latest Blogs
         </p>
-        <div class="bg-white overflow-auto">
-            <table class="min-w-full bg-white">
+        <div class=" overflow-auto m-auto">
+            <table class=" m-auto  bg-white">
                 <thead class="bg-gray-800 text-white">
+
                     <tr>
-                        <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Name</th>
-                        <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Last name</th>
-                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Phone</th>
-                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Email</th>
+                        <th class=" text-left py-3 px-4 uppercase font-semibold text-sm">Site Title </th>
+
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Edit Site</th>
                     </tr>
                 </thead>
+
                 <tbody class="text-gray-700">
-                    <tr>
-                        <td class="w-1/3 text-left py-3 px-4">Lian</td>
-                        <td class="w-1/3 text-left py-3 px-4">Smith</td>
-                        <td class="text-left py-3 px-4"><a class="hover:text-blue-500"
-                                href="tel:622322662">622322662</a></td>
-                        <td class="text-left py-3 px-4"><a class="hover:text-blue-500"
-                                href="mailto:jonsmith@mail.com">jonsmith@mail.com</a></td>
-                    </tr>
-                    <tr class="bg-gray-200">
-                        <td class="w-1/3 text-left py-3 px-4">Emma</td>
-                        <td class="w-1/3 text-left py-3 px-4">Johnson</td>
-                        <td class="text-left py-3 px-4"><a class="hover:text-blue-500"
-                                href="tel:622322662">622322662</a></td>
-                        <td class="text-left py-3 px-4"><a class="hover:text-blue-500"
-                                href="mailto:jonsmith@mail.com">jonsmith@mail.com</a></td>
-                    </tr>
+
+                    @foreach ($sites as $site)
+                        <tr>
+
+                            <td class="text-left py-3 px-4"><a class="hover:text-blue-500"
+                                    href="/site/{{ $site->id }}">{{ $site->site_title }}</a></td>
+                            <td class="text-left py-3 px-4"><a class="hover:text-blue-500"
+                                    href="edit/site/{{ $site->id }}"><button
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        Edit
+                                    </button></a></td>
+                        </tr>
+                    @endforeach
+
+
+
 
                 </tbody>
             </table>

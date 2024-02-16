@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Site;
 use Illuminate\Http\Request;
+use App\Models\Article;
+use App\Models\Color;
+use App\Models\DesignTemplate;
 
 class SitesController extends Controller
 {
@@ -24,21 +27,18 @@ class SitesController extends Controller
     // show single listing
     public function show(Site $site)
     {
+        $site_template = DesignTemplate::where('id', $site->design_template_id)->first();
+        $site_color = Color::where('id', $site->color_id)->first();
+        $site_articles = Article::where('site_id', $site->id)->get();
+
         return view('sites.show', [
-            'site' => $site
+            'site' => $site,
+            'site_template' => $site_template->template_type,
+            'site_color' => $site_color,
+            'site_articles' => $site_articles
         ]);
-
-        // or 
-
-        /*    $list = Listing::find($listing->id);
-    if ($listing) {
-        return view('listing', [
-            'listing' => $list
-        ]);
-    } else {
-        // return response('Listing not found', 404);
-        abort(404);*/
     }
+
 
     // show create form
     public function create()

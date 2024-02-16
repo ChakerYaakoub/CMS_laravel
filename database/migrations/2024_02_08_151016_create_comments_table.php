@@ -20,9 +20,9 @@ return new class extends Migration
             $table->unsignedInteger('likes')->default(0);
             $table->timestamps();
 
-            $table->foreign('site_id')->references('id')->on('sites');
+            $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
             $table->foreign('parent_id')->references('id')->on('comments')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

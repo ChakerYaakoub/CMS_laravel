@@ -54,8 +54,27 @@ Route::middleware(['auth'])->group(function () {
     // /upload_image/articles 
     Route::post('/upload_image/articles', [ManagerController::class, 'upload_imageArticles']);
 
+    // fro edit 
+    Route::post('/upload_image/editArticles', [ManagerController::class, 'upload_imageArticles_edit']);
+
+
+
+
     // image_delete / articles
     Route::post('/image_delete/articles', [ManagerController::class, 'remove_imageArticles']);
+
+    // All blogs  view 
+
+    Route::get('/sites/manager/allBlogs', [ManagerController::class, 'myBlogs']);
+
+
+    // All blogs  view 
+
+    Route::get('/sites/manager/edit/site/{site_id}', [ManagerController::class, 'editBlogForm']);
+
+
+    // Update blog general information
+    Route::post('/site/manager/update/{site_id}', [ManagerController::class, 'updateSite']);
 });
 
 // Auth routes
@@ -69,4 +88,4 @@ Route::post('/logout', [UserController::class, 'logout']);
 Route::get('/', [SitesController::class, 'index']);
 Route::get('site/{site}', ['as' => 'site', SitesController::class, 'show']);
 Route::get('site/create', [SitesController::class, 'create']);
-Route::post('/upload/image', [ImageController::class, 'upload'])->name('upload.image');
+//Route::post('/upload/image', [ImageController::class, 'upload'])->name('upload.image');

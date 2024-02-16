@@ -5,38 +5,42 @@
             <div class="">
                 <div class="card">
 
-                    <div class="text-2xl font-bold mb-4">Information Input and Article Details</div>
+                    <div class="text-2xl font-bold mb-4">Edit Site : </div>
 
                     <div class="mb-4">
                         <p>Please provide the required information below. We'll start with general information
                             followed by details about the articles you'd like to add.</p>
                     </div>
+                    <form method="post" action="/site/manager/update/{{ $site->id }}" enctype="multipart/form-data">
+                        @csrf
 
 
-                    <div class="card-body border-2 border-gray-900/10  p-5 rounded  ">
+                        <div class="card-body border-2 border-gray-900/10  p-5 rounded  ">
 
 
-                        <div class="mb-2 text-lg font-semibold">General Information</div>
+                            <div class="mb-2 text-lg font-semibold">General Information</div>
 
-                        {{-- https://tailwindcomponents.com/component/blog-post-1 --}}
+                            {{-- https://tailwindcomponents.com/component/blog-post-1 --}}
 
 
 
-                        <form method="POST" action="/siteGeneral/store" enctype="multipart/form-data">
-                            @csrf
+
+
+                            <input type="number" value="{{ $site->id }}" name="site_id" hidden readonly>
+
 
 
 
                             {{-- title site --}}
 
                             <x-form-input label=" Enter a catchy title for your blog  " name="site_title"
-                                placeholder="Enter blog title" />
+                                placeholder="Enter blog title" value="{{ $site->site_title }}" />
 
 
 
                             {{-- introduction --}}
                             <x-form-textarea label="Provide an engaging introduction to your blog" name="introduction"
-                                placeholder="Enter introduction" />
+                                placeholder="Enter introduction" value="{{ $site->introduction }}" />
 
 
 
@@ -46,12 +50,14 @@
                                 <div class="flex flex-wrap">
                                     {{-- logo  --}}
                                     <x-image-upload label="Upload your logo to personalize your blog  " name="logo"
-                                        placeholder=" logo/ site "></x-image-upload>
+                                        placeholder=" logo/ site "
+                                        value="{{ asset('storage/' . $site->logo) }}"></x-image-upload>
 
                                     {{-- http://127.0.0.1:8000/images/logo.png --}}
                                     {{-- basic image  --}}
                                     <x-image-upload label=" Upload a basic image , blog's theme or topic."
-                                        name="BasicImage" placeholder=" Basic image"></x-image-upload>
+                                        name="BasicImage" placeholder=" Basic image"
+                                        value="{{ asset('storage/' . $site->BasicImage) }}"></x-image-upload>
                                 </div>
                             </div>
                             <br>
@@ -63,7 +69,8 @@
 
                             {{-- tags --}}
                             <x-form-input label="Add tags or categories to help organize your blog content  "
-                                name="tags" placeholder="E.g. google Bard Education ..  " />
+                                name="tags" placeholder="E.g. google Bard Education ..  "
+                                value="{{ $site->tags }}" />
 
 
                             {{-- color  --}}
@@ -82,11 +89,12 @@
 
 
                                 <div class="flex flex-wrap justify-around text-center">
-                                    <x-form-color label="Font Color" name="font_color" />
+                                    <x-form-color label="Font Color" name="font_color"
+                                        value="{{ $site_color->font_color }}" />
                                     <x-form-color label="Background Color of Site" name="background_color"
-                                        value="#FFFFFF" />
+                                        value="{{ $site_color->background_color }}" />
                                     <x-form-color label="Section Separations" name="section_separator_color"
-                                        value="#808080" />
+                                        value="{{ $site_color->section_separator_color }}" />
                                 </div>
 
                             </div>
@@ -96,7 +104,8 @@
 
 
                             {{-- menu  --}}
-                            <x-form-radio name="template_type" value="horizontal_menu" />
+                            <x-form-radio name="template_type" value="{{ $site_template }}" />
+
 
 
 
@@ -134,25 +143,52 @@
                                 </div>
                             </div>
 
-
-                            <div class=" text-center">
-                                <button
-                                    class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                    Save General Information and Continue to Articles Details
-                                </button>
-                            </div>
+                        </div>
 
 
 
 
 
+                        {{-- //{{ $site_articles }} --}}
+
+                        @foreach ($site_articles as $site_article)
+                            @php
+                                $article_nb = $loop->index + 1;
+                            @endphp
+
+                            <br />
+
+                            @include('manager.partials.editArticle', [
+                                'site_article' => $site_article,
+                                'article_nb' => $article_nb,
+                                'site_title' => $site->site_title,
+                            ])
+                        @endforeach
 
 
 
-                        </form>
 
-                    </div>
+
+                        <div class=" text-center">
+                            <button
+                                class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                Update and View
+                            </button>
+                        </div>
+
+
+
+
+
+
+
+
+                    </form>
+
+
                 </div>
+
+
             </div>
         </div>
     </div>

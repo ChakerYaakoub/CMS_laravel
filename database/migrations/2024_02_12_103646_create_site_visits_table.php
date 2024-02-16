@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('ip_address', 45);
             //  $table->timestamp('visit_timestamp')->default(now());
             $table->timestamps();
-            $table->foreign('site_id')->references('id')->on('sites');
-            $table->foreign('site_builder_id')->references('id')->on('users');
+            $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
+            $table->foreign('site_builder_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

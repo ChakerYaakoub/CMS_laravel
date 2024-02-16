@@ -76,9 +76,9 @@
 </head>
 
 <body class="relative min-h-screen pb-28">
-    <nav class="flex justify-between items-center mb-4">
+    <nav class="flex justify-between items-center mb-4 text-black-50">
         <a href="/"><img class="w-36" src="{{ asset('images/logo.png') }}" alt="" class="logo" /></a>
-        <ul class="flex space-x-6 mr-6 md:text-lg  sm:x-sm">
+        <ul class="flex space-x-6 mr-6 md:text-lg  sm:x-sm text-black-50">
 
             {{-- is login  --}}
             @auth
@@ -108,7 +108,7 @@
                 {{-- not login   --}}
             @else
                 <li>
-                    <a href="/register" class="hover:text-laravel"><i class="fa-solid fa-user-plus"></i> Register</a>
+                    <a href="/register" class="hover:text-laravel "><i class="fa-solid fa-user-plus"></i> Register</a>
                 </li>
                 <li>
                     <a href="/login" class="hover:text-laravel"><i class="fa-solid fa-arrow-right-to-bracket"></i>
@@ -134,9 +134,9 @@
 
 
 
-
+    {{-- // opacity-90 --}}
     <footer
-        class="absolute bottom-0 left-0 w-full flex items-center justify-start font-bold bg-red-400 text-white h-24   opacity-90 md:justify-center mt-12">
+        class="absolute z-50 bottom-0 left-0 w-full flex items-center justify-start font-bold bg-red-400 text-white h-24    md:justify-center mt-12">
         <p class="ml-2">CMS Corte Copyright &copy; 2022, All Rights reserved</p>
 
 

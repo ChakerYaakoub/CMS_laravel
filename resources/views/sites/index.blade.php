@@ -1,6 +1,4 @@
-
-   
-    {{-- if we use  @yield('content') in layout then    --}}
+{{-- if we use  @yield('content') in layout then    --}}
 {{-- @extends('layout') --}}
 
 {{-- @section('content') --}}
@@ -15,33 +13,38 @@
 
 
 
-@include('partials._hero')
+    @include('partials._hero')
 
-@include('partials._search')
-
-
+    @include('partials._search')
 
 
-<div
-class="lg:grid lg:grid-cols-2 gap-4 space-y-4 md:space-y-0 mx-4"
->
 
-@unless (count($sites) ==0)
-    
 
- 
- @foreach($sites as $site)
-<x-site-card :site="$site" />
- @endforeach
 
- @else 
- <h1>No Listings Found</h1>
 
- @endunless
+    @unless (count($sites) == 0)
+        <div class="lg:grid lg:grid-cols-2 gap-4 space-y-4 md:space-y-0 mx-4">
 
-</div>
- 
 
-{{-- @endsection --}}
+
+            @foreach ($sites as $site)
+                <x-site-card :site="$site" />
+            @endforeach
+
+        </div>
+    @else
+        <br />
+        <br />
+        <center>
+            <h1>No Blogs Found</h1>
+            <center />
+
+
+        @endunless
+
+
+
+
+        {{-- @endsection --}}
 
 </x-layout>

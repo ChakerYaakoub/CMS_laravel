@@ -33,9 +33,9 @@ return new class extends Migration
             $table->boolean('is_accepted')->default(true);
 
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('design_template_id')->references('id')->on('design_templates');
-            $table->foreign('color_id')->references('id')->on('colors');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('design_template_id')->references('id')->on('design_templates')->onDelete('cascade');
+            $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
             $table->timestamps();
         });
     }

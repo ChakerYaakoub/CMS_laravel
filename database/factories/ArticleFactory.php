@@ -17,7 +17,7 @@ class ArticleFactory extends Factory
             // 'user_id' => \App\Models\User::factory()->create()->id,
             'user_id' => $this->faker->numberBetween(1, 20),
             // 'site_id' => \App\Models\Site::factory()->create()->id,
-            'site_id' => $this->faker->numberBetween(1, 20),
+            // 'site_id' => $this->faker->numberBetween(1, 20),
             'article_nb' => $this->faker->numberBetween(1, 20),
             'article_title' => $this->faker->paragraph(5, true),
             'article_content' =>  $this->faker->paragraph(2, 3),

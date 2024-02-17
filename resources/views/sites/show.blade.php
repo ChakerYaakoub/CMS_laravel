@@ -39,6 +39,7 @@
             'site_template' => $site_template,
             'site_color' => $site_color,
             'site_articles' => $site_articles,
+            'comments' => $comments,
         ])
     @elseif ($site_template == 'horizontal_menu')
         @include('sites.partials.horizontalTemplate', [
@@ -46,6 +47,7 @@
             'site_template' => $site_template,
             'site_color' => $site_color,
             'site_articles' => $site_articles,
+            'comments' => $comments,
         ])
     @else
         @include('sites.partials.burgerTemplate', [
@@ -53,6 +55,7 @@
             'site_template' => $site_template,
             'site_color' => $site_color,
             'site_articles' => $site_articles,
+            'comments' => $comments,
         ])
     @endif
 

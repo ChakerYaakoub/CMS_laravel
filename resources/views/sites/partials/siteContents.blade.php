@@ -117,10 +117,17 @@
 
 
     {{--  commnet its here  --}}
+    {{-- https://flowbite.com/blocks/publisher/comments/ --}}
 
 
-    <div id="comments">
-        commnets
-    </div>
+    @include('sites.partials.comments', [
+        'site' => $site,
+        'site_template' => $site_template,
+        'site_color' => $site_color,
+        'site_articles' => $site_articles,
+        'comments' => $comments,
+    ])
+
+
 
 </div>

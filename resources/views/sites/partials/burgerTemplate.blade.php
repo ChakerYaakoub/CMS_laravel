@@ -27,7 +27,7 @@ color : {{ $site_color->font_color }} ;">
 
                 <li>
                     <a href="#introduction" {{-- text-gray-900  --}} aria-current="page"
-                        class="block py-2 px-3 text-gray-900 rounded  bg-blue-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        class="block py-2 px-3 text-gray-900 rounded   hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                         {{-- <span class="ms-3">{{ $site->site_title }}</span> --}}
                         <span class="ms-3"> 1 - Introduction</span>
 
@@ -87,7 +87,10 @@ color : {{ $site_color->font_color }} ;">
         'site_template' => $site_template,
         'site_color' => $site_color,
         'site_articles' => $site_articles,
+        'comments' => $comments,
     ])
+
+
 
 </div>
 

@@ -73,13 +73,54 @@
                 </li>
 
                 @if (auth()->user() && auth()->user()->id == $site->user_id)
-                    <li>
+                    <li class="hidden sm:block">
 
-                        <a class="hover:text-blue-500" href="/sites/manager/edit/site/{{ $site->id }}"><button
-                                class="bg-blue-500
-                            w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Edit
-                            </button></a>
+                        <a class="hover:text-blue-500" href="/sites/manager/edit/site/{{ $site->id }}">
+                            <center><button
+                                    class="bg-blue-500
+                                sm:w-full w-1/4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    Edit
+                                </button>
+                            </center>
+                        </a>
+
+
+
+                    </li>
+                    <li class="hidden sm:block">
+
+
+                        @include('sites.partials.deleteBtn', [
+                            'site' => $site,
+                            'class' => 'sm:w-full w-1/4',
+                        ])
+
+
+
+                    </li>
+
+                    <li class="block  sm:hidden">
+
+                        <div class="flex justify-between">
+
+
+
+                            <a class="hover:text-blue-500" href="/sites/manager/edit/site/{{ $site->id }}">
+                                <center><button
+                                        class="bg-blue-500
+                                sm:w-full w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        Edit
+                                    </button>
+                                </center>
+                            </a>
+
+                            @include('sites.partials.deleteBtn', [
+                                'site' => $site,
+                                'class' => 'sm:w-full w-full',
+                            ])
+
+
+                        </div>
 
                     </li>
                 @endif

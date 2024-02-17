@@ -84,6 +84,8 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::delete('/site/comment/remove/{id}', [SitesController::class, 'remove'])->name('comment.remove');
+
+    Route::delete('/site/remove/{id}', [SitesController::class, 'removeSite'])->name('site.remove');
 });
 
 // Auth routes

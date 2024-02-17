@@ -75,6 +75,15 @@ Route::middleware(['auth'])->group(function () {
 
     // Update blog general information
     Route::post('/site/manager/update/{site_id}', [ManagerController::class, 'updateSite']);
+
+    // add new comment 
+    Route::post('/site/comment/store', [SitesController::class, 'storeComment']);
+
+    Route::post('/site/reply/store', [SitesController::class, 'storeReply']);
+
+
+
+    Route::delete('/site/comment/remove/{id}', [SitesController::class, 'remove'])->name('comment.remove');
 });
 
 // Auth routes

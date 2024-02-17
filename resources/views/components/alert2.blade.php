@@ -9,7 +9,7 @@
     ];
 @endphp
 
-<div id="alert-{{ $type }}"
+<div id="alert-{{ $type }}" x-data="{ open: true }" x-show="open"
     class="flex items-center p-4 mb-4 text-{{ $colors[$type]['text'] }}-800 rounded-lg bg-{{ $colors[$type]['bg'] }}-50 dark:bg-gray-800 dark:text-{{ $colors[$type]['text'] }}-400"
     role="alert">
     <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -21,7 +21,7 @@
     <div class="ms-3 text-sm font-medium">
         {{ $message }}
     </div>
-    <button type="button"
+    <button type="button" @click="open = false"
         class="ms-auto -mx-1.5 -my-1.5 bg-{{ $colors[$type]['bg'] }}-50 text-{{ $colors[$type]['text'] }}-500 rounded-lg focus:ring-2 focus:ring-{{ $colors[$type]['bg'] }}-400 p-1.5 hover:bg-{{ $colors[$type]['bg'] }}-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-{{ $colors[$type]['text'] }}-400 dark:hover:bg-gray-700"
         data-dismiss-target="#alert-{{ $type }}" aria-label="Close">
         <span class="sr-only">Close</span>

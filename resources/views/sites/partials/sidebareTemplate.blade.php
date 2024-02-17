@@ -157,6 +157,7 @@
             'site_template' => $site_template,
             'site_color' => $site_color,
             'site_articles' => $site_articles,
+            'comments' => $comments,
         ])
 
     </div>

@@ -1,6 +1,8 @@
 <div>
     <div class="container">
 
+
+
         <div class="">
             <div class="">
                 <div class="card">
@@ -165,17 +167,32 @@
                             ])
                         @endforeach
 
+                        {{-- <div class="flex justify-center">
+                            <button onclick="addnewArticle()" type="button"
+                                class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                Add Another Article
+                            </button>
+                        </div>
+
+                        <div id="newArticles">
+
+                        </div> --}}
+
+
+
 
 
 
 
                         <div class=" text-center">
                             <br><br>
-                            <button
+                            <button type="submit"
                                 class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
                                 Update and View
                             </button>
                         </div>
+
+
 
 
 
@@ -193,6 +210,24 @@
             </div>
         </div>
     </div>
+
+
+
+
+    <script>
+        let article_nb = {{ $site_articles->count() + 1 }};
+        const addnewArticle = () => {
+
+            const article = document.getElementById('newArticles');
+
+            console.log(article_nb);
+
+
+
+
+
+        }
+    </script>
 
 
 

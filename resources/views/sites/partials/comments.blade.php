@@ -1,8 +1,9 @@
-<div class="bg-white dark:bg-gray-900 py-8 lg:py-16 antialiased" id="comments">
+<div class=" dark:bg-gray-900 py-8 lg:py-16 antialiased" id="comments">
     <div class="max-w-2xl mx-auto px-4">
         <div class="flex justify-between items-center mb-6">
             {{-- // count of comments --}}
-            <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Discussion (20)</h2>
+            <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Discussion ({{ $comments->count() }})
+            </h2>
         </div>
 
         {{-- // add new commmets form --}}
@@ -79,6 +80,7 @@
                 {{-- // Reply // comment   --}}
                 @foreach ($comments as $reply)
                     @if ($reply->parent_id != null && $reply->parent_id == $comment->id)
+                        <br>
                         <article class="p-6 mb-3 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900  ">
                             <footer class="flex justify-between items-center mb-2">
                                 <div class="flex items-center">

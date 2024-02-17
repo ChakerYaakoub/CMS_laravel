@@ -33,8 +33,11 @@ class SitesController extends Controller
         $site_template = DesignTemplate::where('id', $site->design_template_id)->first();
         $site_color = Color::where('id', $site->color_id)->first();
         $site_articles = Article::where('site_id', $site->id)->get();
+
+
         $comments = Comment::select('comments.*', 'users.name as user_name')
             ->leftJoin('users', 'comments.user_id', '=', 'users.id')
+            ->where('comments.site_id', $site->id)
             ->get();
 
 

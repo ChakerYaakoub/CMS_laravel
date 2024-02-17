@@ -55,17 +55,22 @@ color : {{ $site_color->font_color }} ;">
                 </li>
 
                 @if (auth()->user() && auth()->user()->id == $site->user_id)
-                    <li>
+                    <li class="flex justify-around pb-2">
 
-                        <a class="hover:text-blue-500  m-auto" href="/sites/manager/edit/site/{{ $site->id }}">
+                        <a class="hover:text-blue-500  " href="/sites/manager/edit/site/{{ $site->id }}">
 
-                            <center><button
-                                    class="bg-blue-500 w-1/4 m-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Edit
-                                </button> </center>
+                            <button
+                                class="bg-blue-500 w-full m-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Edit
+                            </button>
                         </a>
 
                         <br>
+
+                        @include('sites.partials.deleteBtn', [
+                            'site' => $site,
+                            'class' => 'w-full m-auto',
+                        ])
 
 
                     </li>

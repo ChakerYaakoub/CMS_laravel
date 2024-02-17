@@ -105,6 +105,12 @@
                         </button></a>
 
                 </li>
+                <li>
+                    @include('sites.partials.deleteBtn', [
+                        'site' => $site,
+                        'class' => 'sm:w-full w-full',
+                    ])
+                </li>
             @endif
 
             {{-- <li>

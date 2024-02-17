@@ -9,6 +9,7 @@ use App\Models\Color;
 use App\Models\Comment;
 use App\Models\DesignTemplate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class SitesController extends Controller
 {
@@ -115,6 +116,25 @@ class SitesController extends Controller
             return response()->json(['message' => 'Comment deleted successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to delete comment'], 500);
+        }
+    }
+
+    public function  removeSite($id)
+    {
+        try {
+            // Find the site by ID
+            $site = Site::findOrFail($id);
+
+            $s = Storage::delete('public/' . $site->logo);
+            $s2 = Storage::delete('public/' . $site->BasicImage);
+
+
+            // Delete the site
+            $site->delete();
+
+            return response()->json(['message' => 'site deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to delete site'], 500);
         }
     }
 }

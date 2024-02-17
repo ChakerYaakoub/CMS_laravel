@@ -87,6 +87,8 @@
                         <th class=" text-left py-3 px-4 uppercase font-semibold text-sm">Site Title </th>
 
                         <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Edit Site</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Delete Site</th>
+
                     </tr>
                 </thead>
 
@@ -102,8 +104,23 @@
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                         Edit
                                     </button></a></td>
+
+                            <td>
+                                @include('sites.partials.deleteBtn', [
+                                    'site' => $site,
+                                    'class' => 'sm:w-full w-full',
+                                ])
+                            </td>
                         </tr>
                     @endforeach
+
+                    @if ($sites->count() == 0)
+                        <tr>
+                            <td class="text-left py-3 px-4 w-full text-center " colspan="3">No sites found</td>
+
+
+                        </tr>
+                    @endif
 
 
 

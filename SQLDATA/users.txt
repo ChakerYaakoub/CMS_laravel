@@ -1,0 +1,5 @@
+user@hotmail.com
+user2@hotmail.com
+user3@hotmail.com
+
+password : 123456

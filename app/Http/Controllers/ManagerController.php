@@ -85,8 +85,8 @@ class ManagerController extends Controller
 
             'site_title' => 'required|string|max:255|unique:sites,site_title',
             'introduction' => 'required|string',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'BasicImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'BasicImage' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'tags' => 'required|string',
             'font_color' => 'required|string',
             'background_color' => 'required|string',
@@ -260,8 +260,8 @@ class ManagerController extends Controller
             'site_title' => 'required|string|max:255',
             'site_id' => 'required|integer', // 'site_id' is required and must be an 'integer
             'introduction' => 'required|string',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'BasicImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'BasicImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'tags' => 'required|string',
             'font_color' => 'required|string',
             'background_color' => 'required|string',

@@ -5,7 +5,7 @@
         @include('manager.partials._dashboard', [
             'totalVisits' => $totalVisits,
             'totalSites' => $totalSites,
-            'totalReactions' => $totalReactions,
+            'reactions' => $reactions,
         ])
 
 

@@ -34,4 +34,14 @@ class Site extends Model
                 ->orWhere('site_builder', 'like', '%' . request('search') . '%');
         };
     }
+
+    public function reactions()
+    {
+        return $this->hasMany(Reaction::class);
+    }
+
+    public function siteVisits()
+    {
+        return $this->hasMany(SiteVisit::class);
+    }
 }

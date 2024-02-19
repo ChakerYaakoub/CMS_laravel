@@ -93,6 +93,7 @@ color : {{ $site_color->font_color }} ;">
         'site_color' => $site_color,
         'site_articles' => $site_articles,
         'comments' => $comments,
+        'reactions' => $reactions,
     ])
 
 

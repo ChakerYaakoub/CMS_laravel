@@ -8,6 +8,8 @@ use App\Models\Article;
 use App\Models\Color;
 use App\Models\Comment;
 use App\Models\DesignTemplate;
+use App\Models\Reaction;
+use App\Models\SiteVisit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,17 +30,34 @@ class SitesController extends Controller
     }
 
     // show single listing
-    public function show(Site $site)
+    public function show(Request $request,  Site $site)
     {
         $site_template = DesignTemplate::where('id', $site->design_template_id)->first();
         $site_color = Color::where('id', $site->color_id)->first();
-        $site_articles = Article::where('site_id', $site->id)->get();
+        $site_articles = Article::where('site_id', $site->id)
+            ->orderBy('article_nb', 'asc')
+            ->get();
+
 
 
         $comments = Comment::select('comments.*', 'users.name as user_name')
             ->leftJoin('users', 'comments.user_id', '=', 'users.id')
             ->where('comments.site_id', $site->id)
             ->get();
+        $reactions = Reaction::where('site_id', $site->id)->get();
+
+        $ipAddress = $request->ip();
+        $existingVisit = SiteVisit::where('site_id', $site->id)
+            ->where('ip_address', $ipAddress)
+            ->exists();
+
+        if (!$existingVisit) {
+            SiteVisit::create([
+                'site_id' => $site->id,
+                'site_builder_id' => $site->user_id,
+                'ip_address' => $ipAddress,
+            ]);
+        }
 
 
 
@@ -47,7 +66,9 @@ class SitesController extends Controller
             'site_template' => $site_template->template_type,
             'site_color' => $site_color,
             'site_articles' => $site_articles,
-            'comments' => $comments
+            'comments' => $comments,
+            'reactions' => $reactions
+
 
         ]);
     }
@@ -138,6 +159,34 @@ class SitesController extends Controller
             return response()->json(['message' => 'site deleted successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to delete site'], 500);
+        }
+    }
+
+    // handle reaction 
+
+    public function handleReaction(Request $request, $site_id, $reaction)
+    {
+        $site_builder_id = Site::where('id', $site_id)->first()->user_id;
+        $oldReaction = Reaction::where('site_id', $site_id)->where('user_id', $request->user()->id)->first()->reaction_type ?? null;
+
+        if ($oldReaction == $reaction) {
+            // delete the reaction
+            Reaction::where('site_id', $site_id)->where('user_id', $request->user()->id)->delete();
+            return response()->json(['message' => 'Reaction deleted successfully', 'reaction' => 'none', 'oldReaction' => $oldReaction], 201);
+        }
+        // Check if the user is authenticated
+        if ($request->user()) {
+            // Create or update the reaction in the database
+            $newReaction = Reaction::updateOrCreate(
+                ['site_id' => $site_id, 'user_id' => $request->user()->id],
+                [
+                    'site_builder_id' => $site_builder_id, 'reaction_type' => $reaction
+                ]
+            );
+
+            return response()->json(['message' => 'Reaction updated successfully', 'reaction' => $newReaction->reaction_type, 'oldReaction' => $oldReaction], 200);
+        } else {
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
     }
 }

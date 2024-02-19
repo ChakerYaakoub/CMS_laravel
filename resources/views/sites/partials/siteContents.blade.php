@@ -102,11 +102,31 @@
                     <br>
 
 
-                    <button {{--  --}}
-                        class="px-2 py-1 text-gray-100  bg-green-700 flex w-full items-center justify-center rounded">
-                        like
-                        <i class='bx bx-user-plus ml-2'></i>
-                    </button>
+                    <div
+                        class="px-2 py-1 text-gray-900 flex w-full items-center justify-center justify-between rounded ">
+                        <button onclick="handleReaction('like')" class="text-green-500 hover:text-green-700">
+                            <i id="likeIcon" class="far fa-thumbs-up fa-2x"></i> <br>
+                            <span id='likeNb'></span>
+                        </button>
+                        <button onclick="handleReaction('dislike')" class="text-red-500 hover:text-red-700">
+                            <i id="dislikeIcon" class="far fa-thumbs-down fa-2x"></i> <br>
+                            <span id='dislikeNb'></span>
+
+                        </button>
+                        <button class="text-red-900 hover:text-pink-700" onclick="handleReaction('love')">
+                            <i id="loveIcon" class="far fa-heart fa-2x"></i> <br>
+                            <span id='loveNb'></span>
+
+                        </button>
+                    </div>
+                    <div id="loginAlert" style="display:none;">
+                        <x-alert2 type="info" message="You have to login first!" />
+                    </div>
+
+
+
+
+
 
 
                 </div>
@@ -130,4 +150,144 @@
 
 
 
+
+
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check user's reaction when the page loads
+        checkUserReaction();
+        TotalReactionsByType()
+    });
+
+    const TotalReactionsByType = () => {
+        let like = 0;
+        let dislike = 0;
+        let love = 0;
+        @foreach ($reactions as $reaction)
+            @if ($reaction->reaction_type == 'like')
+                like++;
+            @elseif ($reaction->reaction_type == 'dislike')
+                dislike++;
+            @elseif ($reaction->reaction_type == 'love')
+                love++;
+            @endif
+        @endforeach
+        document.getElementById('likeNb').innerText = like;
+        document.getElementById('dislikeNb').innerText = dislike;
+        document.getElementById('loveNb').innerText = love;
+
+
+
+    }
+
+    const handleReaction = (reaction) => {
+        // Check if user is logged in
+        const isLoggedIn = <?php echo auth()->check() ? 'true' : 'false'; ?>;
+        const site_id = <?php echo $site->id; ?>;
+
+        if (isLoggedIn) {
+            // Send a request to the server to handle the reaction
+            fetch(`/handleReaction/${site_id}/${reaction}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Reaction successfully handled by the server
+                        // Update UI based on the response from the server
+                        response.json().then(data => {
+                            const oldReaction = data.oldReaction;
+                            const newReaction = data.reaction;
+                            updateReactionIcon(newReaction);
+
+                            // Update reaction count
+                            if (oldReaction && oldReaction !== newReaction) {
+                                decrementReactionCount(oldReaction);
+                            }
+                            incrementReactionCount(newReaction);
+                        });
+                    } else {
+                        throw new Error('Failed to handle reaction');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    // Handle error, show error message, etc.
+                });
+        } else {
+            // Show login alert
+            document.getElementById('loginAlert').style.display = 'block';
+        }
+    }
+
+    const incrementReactionCount = (reaction) => {
+        const countElement = document.getElementById(`${reaction}Nb`);
+        countElement.innerText = parseInt(countElement.innerText) + 1;
+    }
+
+    const decrementReactionCount = (reaction) => {
+        const countElement = document.getElementById(`${reaction}Nb`);
+        countElement.innerText = parseInt(countElement.innerText) - 1;
+    }
+
+    const updateReactionIcon = (reaction) => {
+        const icon = document.getElementById(`${reaction}Icon`);
+        switch (reaction) {
+            case 'like':
+                toggleReactionIcon('like');
+                removeReactionIcon('dislike');
+                removeReactionIcon('love');
+                break;
+            case 'dislike':
+                toggleReactionIcon('dislike');
+
+                removeReactionIcon('like');
+                removeReactionIcon('love');
+                break;
+            case 'love':
+                toggleReactionIcon('love');
+
+                removeReactionIcon('like');
+                removeReactionIcon('dislike');
+                break;
+            default:
+                console.error('Invalid reaction type');
+        }
+    }
+
+    const toggleReactionIcon = (reaction) => {
+        const icon = document.getElementById(`${reaction}Icon`);
+        icon.classList.toggle('fa-solid');
+    }
+    const removeReactionIcon = (reaction) => {
+        const icon = document.getElementById(`${reaction}Icon`);
+        icon.classList.remove('fa-solid');
+    }
+
+    const checkUserReaction = () => {
+        // Check if user has a reaction
+        const hasReaction = <?php echo $reactions->contains('user_id', auth()->id()) ? 'true' : 'false'; ?>;
+        console.log('User has a reaction: ' + hasReaction);
+
+        if (hasReaction) {
+            // Get the user's reaction if reactions exist
+            const userReaction = "<?php
+            if ($reactions != null && $reactions->where('user_id', auth()->id())->isNotEmpty()) {
+                echo $reactions->where('user_id', auth()->id())->first()->reaction_type;
+            } else {
+                echo ''; // Return empty string if no reaction found
+            }
+            ?>";
+
+            console.log('User reaction type: ' + userReaction);
+
+            if (userReaction !== '') {
+                toggleReactionIcon(userReaction);
+            }
+        }
+    }
+</script>

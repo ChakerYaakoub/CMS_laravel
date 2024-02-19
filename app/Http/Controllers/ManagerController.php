@@ -10,6 +10,7 @@ use App\Models\Site;
 use App\Models\SiteVisit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use stdClass;
 use Illuminate\Validation\ValidationException;
@@ -38,11 +39,25 @@ class ManagerController extends Controller
         $totalSites = Site::where('user_id', $userId)->count();
 
         // Total reactions by the logged-in user
-        $totalReactions = Reaction::where('user_id', $userId)->count();
+        $reactions = Reaction::where('site_builder_id', $userId);
 
-        $sites = Site::where('user_id', $userId)->get();
+        $sites = Site::where('user_id', $userId)
+            ->withCount([
+                'reactions',
+                'reactions as likes_count' => function ($query) {
+                    $query->where('reaction_type', 'like');
+                },
+                'reactions as dislikes_count' => function ($query) {
+                    $query->where('reaction_type', 'dislike');
+                },
+                'reactions as loves_count' => function ($query) {
+                    $query->where('reaction_type', 'love');
+                },
+                'siteVisits'
+            ])
+            ->get();
 
-        return view('manager.index', compact('totalVisits', 'totalSites', 'totalReactions', 'sites'));
+        return view('manager.index', compact('totalVisits', 'totalSites', 'reactions', 'sites'));
     }
 
     public function showForm()
@@ -217,7 +232,9 @@ class ManagerController extends Controller
 
         $site_template = DesignTemplate::where('id', $site->design_template_id)->first()->template_type;
         $site_color = Color::where('id', $site->color_id)->first();
-        $site_articles = Article::where('site_id', $site->id)->get();
+        $site_articles = Article::where('site_id', $site->id)
+            ->orderBy('article_nb', 'asc')
+            ->get();
 
         // return view('sites.show', [
         //    'site' => $site,
@@ -232,6 +249,7 @@ class ManagerController extends Controller
     // update site
     public function updateSite(Request $request, $site_id)
     {
+        // dd($request->all());
 
 
 
@@ -255,6 +273,7 @@ class ManagerController extends Controller
             'articles.*.content' => 'nullable|string',
             'articles.*.id' => 'integer',
             'articles.*.delete' => 'string',
+            'articles.*.article_nb' => 'integer',
 
 
         ]);
@@ -330,14 +349,28 @@ class ManagerController extends Controller
 
 
         // Process articles
-        $articleNb = 1;
+        // $articleNb = 1;
         foreach ($validatedData['articles'] as $articleIndex => $articleData) {
             if ($articleData['delete'] === 'true') {
-                Article::destroy($articleData['id']);
-            } else {
-                //  $article = Article::find($articleData['id']);
-                $article = Article::where('id', $articleData['id'])->first(); // Use first() instead of get()
+                $article_nb_deleted = $articleData['article_nb'];
 
+                Article::destroy($articleData['id']);
+
+                // Debug output
+                Log::info("Article {$article_nb_deleted} deleted.");
+
+                // Decrement article_nb for articles with article_nb greater than the deleted article
+                foreach ($validatedData['articles'] as &$otherArticleData) {
+                    if ($otherArticleData['article_nb'] > $article_nb_deleted) {
+                        $otherArticleData['article_nb']--;
+
+                        // Debug output
+                        Log::info("Article {$otherArticleData['id']} updated with new article_nb: {$otherArticleData['article_nb']}");
+                    }
+                }
+                unset($otherArticleData); // Unset reference to prevent unexpected behavior
+            } else {
+                $article = Article::find($articleData['id']);
 
                 if (!$article) {
                     throw new \Exception("Article not found with ID: {$articleData['id']}");
@@ -346,19 +379,38 @@ class ManagerController extends Controller
                 $article->update([
                     'article_title' => $articleData['title'],
                     'article_content' => $articleData['content'],
-                    'article_nb' => $articleNb,
+                    'article_nb' => $articleData['article_nb'],
                 ]);
-
-                //dd($articleData);
-                // dd($article->toArray());
-
-                $article->save();
-
-                $articleNb++;
-
-                // You don't need to call $article->save() here, because ->update() method already saves the changes.
             }
         }
+        foreach ($validatedData['articles'] as $articleIndex => $articleData) {
+            if ($articleData['delete'] === 'true') {
+                $article_nb_deleted = $articleData['article_nb'];
+
+                Article::destroy($articleData['id']);
+
+                // Decrement article_nb for articles with article_nb greater than the deleted article
+                foreach ($validatedData['articles'] as &$otherArticleData) {
+                    if ($otherArticleData['article_nb'] > $article_nb_deleted) {
+                        $otherArticleData['article_nb']--;
+                    }
+                }
+                unset($otherArticleData); // Unset reference to prevent unexpected behavior
+            } else {
+                $article = Article::find($articleData['id']);
+
+                if (!$article) {
+                    throw new \Exception("Article not found with ID: {$articleData['id']}");
+                }
+
+                $article->update([
+                    'article_title' => $articleData['title'],
+                    'article_content' => $articleData['content'],
+                    'article_nb' => $articleData['article_nb'],
+                ]);
+            }
+        }
+
 
 
 
@@ -407,6 +459,25 @@ class ManagerController extends Controller
     }
 
 
-    // delete image articles
 
+
+    public function getNewArticle(Request $request, $site_id, $article_nb)
+    {
+
+        $site = Site::find($site_id);
+        $site_articles = Article::where('site_id', $site->id)->get();
+        // $article_nb = $site_articles->count() + 1;
+        $site_title = $site->site_title;
+
+        $site_article = Article::create([
+            'site_id' => $site_id,
+            'article_title' => 'New Article ',
+            'article_content' => 'New Article Content',
+            'article_nb' => $article_nb,
+        ]);
+
+        // Generate the HTML content for the new article using the received site ID
+        $html = view('manager.partials.editArticle', compact('site_article', 'article_nb', 'site_title'))->render();
+        return response()->json(['html' => $html, 'site_article_id' => $site_article->id]);
+    }
 }

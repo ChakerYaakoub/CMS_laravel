@@ -86,6 +86,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/site/comment/remove/{id}', [SitesController::class, 'remove'])->name('comment.remove');
 
     Route::delete('/site/remove/{id}', [SitesController::class, 'removeSite'])->name('site.remove');
+
+    // add new article edit 
+
+
+
+    Route::get('/manager/addNewArticle/{site_id}/{article_nb}', [ManagerController::class, 'getNewArticle']);
 });
 
 // Auth routes
@@ -100,3 +106,8 @@ Route::get('/', [SitesController::class, 'index']);
 Route::get('site/{site}', ['as' => 'site', SitesController::class, 'show']);
 Route::get('site/create', [SitesController::class, 'create']);
 //Route::post('/upload/image', [ImageController::class, 'upload'])->name('upload.image');
+
+
+// add reaction 
+// routes/web.php
+Route::post('/handleReaction/{site_id}/{reaction}',  [SitesController::class, 'handleReaction']);

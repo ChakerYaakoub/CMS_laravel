@@ -63,7 +63,7 @@
                     </div>
                     <div class="flex-1 text-right md:text-center">
                         <h2 class="font-bold uppercase text-gray-600">Total Reaction </h2>
-                        <p class="font-bold text-3xl">{{ $totalReactions }} Reaction </p>
+                        <p class="font-bold text-3xl">{{ $reactions->count() }} Reaction </p>
                     </div>
                 </div>
             </div>
@@ -73,39 +73,54 @@
 
 
 
+
     {{-- table if we want  --}}
 
     <div class="w-auto mt-12">
         <p class="text-xl pb-3 flex items-center">
             <i class="fas fa-list mr-3"></i> My Latest Blogs
         </p>
-        <div class=" overflow-auto m-auto">
-            <table class=" m-auto  bg-white">
-                <thead class="bg-gray-800 text-white">
-
+        <div class=" overflow-auto m-auto text-center items-center">
+            <table class="m-auto bg-white  border-2  border-gray-100">
+                <thead class="bg-gray-800 text-white border-2 border-gray-100">
                     <tr>
-                        <th class=" text-left py-3 px-4 uppercase font-semibold text-sm">Site Title </th>
-
-                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Edit Site</th>
-                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Delete Site</th>
-
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm  border-2 border-gray-100">Site
+                            Title</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm border-2 border-gray-100"
+                            colspan="3">
+                            Reactions</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm border-2 border-gray-100">
+                            Visitors</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm border-2 border-gray-100">Edit
+                            Site</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm border-2 border-gray-100">Delete
+                            Site</th>
                     </tr>
+
                 </thead>
-
-                <tbody class="text-gray-700">
-
+                <tr class="bg-gray-500 text-white border-0">
+                    <td></td>
+                    <td class="border-2 border-gray-100">Likes</td>
+                    <td class="border-2 border-gray-100">Dislikes</td>
+                    <td class="border-2 border-gray-100">Loves</td>
+                    <td class="border-none"></td>
+                    <td class="border-none"></td>
+                    <td class="border-none"></td>
+                </tr>
+                <tbody class="text-gray-700 items-center">
                     @foreach ($sites as $site)
                         <tr>
-
-                            <td class="text-left py-3 px-4"><a class="hover:text-blue-500"
+                            <td class="text-left py-3 px-4 border-x-2 border-gray-200  "><a class="hover:text-blue-500"
                                     href="/site/{{ $site->id }}">{{ $site->site_title }}</a></td>
-                            <td class="text-left py-3 px-4"><a class="hover:text-blue-500"
+                            <td class="text-left py-3 px-4 border">{{ $site->likes_count }}</td>
+                            <td class="text-left py-3 px-4 border">{{ $site->dislikes_count }}</td>
+                            <td class="text-left py-3 px-4 border">{{ $site->loves_count }}</td>
+                            <td class="text-left py-3 px-4 text-center border">{{ $site->site_visits_count }}</td>
+                            <td class="text-left py-3 px-4 border"><a class="hover:text-blue-500"
                                     href="edit/site/{{ $site->id }}"><button
-                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                        Edit
-                                    </button></a></td>
-
-                            <td>
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button></a>
+                            </td>
+                            <td class="border">
                                 @include('sites.partials.deleteBtn', [
                                     'site' => $site,
                                     'class' => 'sm:w-full w-full',
@@ -113,20 +128,14 @@
                             </td>
                         </tr>
                     @endforeach
-
                     @if ($sites->count() == 0)
                         <tr>
-                            <td class="text-left py-3 px-4 w-full text-center " colspan="3">No sites found</td>
-
-
+                            <td class="text-left py-3 px-4 w-full text-center" colspan="7">No sites found</td>
                         </tr>
                     @endif
-
-
-
-
                 </tbody>
             </table>
+
         </div>
     </div>
 </main>

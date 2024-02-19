@@ -91,7 +91,7 @@
 
                 <li>
                     <a href="/sites/manager/dashboard" class="hover:text-laravel"><i class="fa-solid fa-gear"></i> Manager
-                        Blogs</a>
+                        <span class="sm:inline  hidden ">Blogs </span> </a>
                 </li>
 
                 <li>
